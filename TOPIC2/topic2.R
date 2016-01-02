@@ -62,12 +62,16 @@ order %>% select(상품대분류명, 상품중분류명) %>% table %>%
 s.cat <- names(categories)
 l.cat <- unique(categories)
 
+cat.list <- list()
+for ( i in 1:length(l.cat) ) {
+  cat.list[[l.cat[i]]] <- names(categories[categories == l.cat[i]])
+}
 
 ## merged data set (just in case)
 merged <- merge(demo, order, by = "ID")
 
 ###################################################################################################
-### Analysis 0. Preliminaries
+### Analysis 0. Pre-step
 ###################################################################################################
 
 ## extend 'demo' with purchase info
@@ -108,12 +112,13 @@ demo2[is.na(demo2)] <- 0
 ### Analysis 1. PCA
 ###################################################################################################
 
+## try to group product categories
 
-num.demo <- demo1 %>% select(-ID, -거주지역)
+num.demo <- demo1 %>% select(-(ID:거주지역))
 
 demo.pc1 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
 
-num.demo <- demo2 %>% select(-ID, -거주지역)
+num.demo <- demo2 %>% select(-(ID:거주지역))
 
 demo.pc2 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
 

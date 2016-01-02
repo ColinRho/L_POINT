@@ -92,7 +92,3 @@ plotter <-
 plotter(df = merged_potato, product = "상품B", gender = 2, location = "부산")
 
 
-merged_potato %>% filter(구매시점 == 1 & 상품구분 == "상품B") %>% group_by(구매지역) %>% 
-  summarise( range(평균기온) )
-
-nls()
