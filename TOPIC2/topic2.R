@@ -62,23 +62,16 @@ order %>% select(상품대분류명, 상품중분류명) %>% table %>%
 s.cat <- names(categories)
 l.cat <- unique(categories)
 
-<<<<<<< HEAD
 cat.list <- list()
 for ( i in 1:length(l.cat) ) {
   cat.list[[l.cat[i]]] <- names(categories[categories == l.cat[i]])
 }
-=======
->>>>>>> 3115152e72f692ce0fb4f2ed54136d13a07787f5
 
 ## merged data set (just in case)
 merged <- merge(demo, order, by = "ID")
 
 ###################################################################################################
-<<<<<<< HEAD
 ### Analysis 0. Pre-step
-=======
-### Analysis 0. Preliminaries
->>>>>>> 3115152e72f692ce0fb4f2ed54136d13a07787f5
 ###################################################################################################
 
 ## extend 'demo' with purchase info
@@ -119,7 +112,6 @@ demo2[is.na(demo2)] <- 0
 ### Analysis 1. PCA
 ###################################################################################################
 
-<<<<<<< HEAD
 ## try to group product categories
 
 num.demo <- demo1 %>% select(-(ID:거주지역))
@@ -127,14 +119,6 @@ num.demo <- demo1 %>% select(-(ID:거주지역))
 demo.pc1 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
 
 num.demo <- demo2 %>% select(-(ID:거주지역))
-=======
-
-num.demo <- demo1 %>% select(-ID, -거주지역)
-
-demo.pc1 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
-
-num.demo <- demo2 %>% select(-ID, -거주지역)
->>>>>>> 3115152e72f692ce0fb4f2ed54136d13a07787f5
 
 demo.pc2 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
 
@@ -147,9 +131,5 @@ library(cluster)
 
 
 fit <- kmeans(num.demo, 3)
-<<<<<<< HEAD
 
 
-
-=======
->>>>>>> 3115152e72f692ce0fb4f2ed54136d13a07787f5
