@@ -68,15 +68,50 @@ for ( i in 1:length(l.cat) ) {
   cat.list[[l.cat[i]]] <- names(categories[categories == l.cat[i]])
 }
 
+## processing location character string variable on 'demo'
+loc_trans <- 
+  
+  # x should be "거주지역" or "구매지역"
+  function(X = demo)  {
+    
+    if (identical(X, demo)) {
+      
+      X[["거주지역"]] %>% 
+        strsplit(split = " ") %>% unlist %>% matrix(byrow = T, ncol = 2) %>% 
+        data.table -> loc
+      
+      colnames(loc) <- c("loc1", "loc2")
+      
+      dt <- data.table( X %>% select(-거주지역), loc)
+      
+    } else if (identical(X, order)) {
+      
+      X[["구매지역"]] %>% 
+        strsplit(split = " ") %>% unlist %>% matrix(byrow = T, ncol = 2) %>% 
+        data.table -> loc
+      
+      colnames(loc) <- c("Loc1", "Loc2")
+      
+      dt <- data.table( X %>% select(-구매지역), loc)
+      
+      
+    }
+    
+    return(dt)
+    
+    
+  }
+
+demo <- loc_trans(demo)
+order <- loc_trans(order)
+
 ## merged data set (just in case)
 merged <- merge(demo, order, by = "ID")
 
-###################################################################################################
-### Analysis 0. Pre-step
-###################################################################################################
+# loc : residence
+# Loc : purchased place
 
 ## extend 'demo' with purchase info
-
 demo <- data.frame(demo)
 demo1 <- data.table(demo) ; demo2 <- data.table(demo)
 demo <- data.table(demo)
@@ -94,7 +129,6 @@ for (k in 1:length(s.cat)) {
 
 demo1[is.na(demo1)] <- 0
 
-
 # by '상품대분류명'
 order %>% group_by(ID, 상품대분류명) %>% summarise( amount = sum(구매금액) ) %>%
   arrange(ID) -> by_category
@@ -107,30 +141,4 @@ for (k in 1:length(l.cat)) {
 }
 
 demo2[is.na(demo2)] <- 0
-
-
-###################################################################################################
-### Analysis 1. PCA
-###################################################################################################
-
-## try to group product categories
-
-num.demo <- demo1 %>% select(-(ID:거주지역))
-
-demo.pc1 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
-
-num.demo <- demo2 %>% select(-(ID:거주지역))
-
-demo.pc2 <- prcomp(x = num.demo, center = TRUE, scale. = TRUE)
-
-###################################################################################################
-### Analysis 2. k-means 
-###################################################################################################
-
-
-library(cluster)
-
-
-fit <- kmeans(num.demo, 3)
-
 
